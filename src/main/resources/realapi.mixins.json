@@ -1,0 +1,23 @@
+{
+  "required": true,
+  "package": "net.ntrdeal.realapi.mixin",
+  "compatibilityLevel": "JAVA_25",
+  "mixins": [
+    "CombatRulesMixin",
+    "CrossbowItemMixin",
+    "EntityMixin",
+    "ExperienceOrbMixin",
+    "LivingEntityMixin",
+    "PlayerMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "overwrites": {
+    "requireAnnotations": true
+  },
+  "client": [
+    "client.AbstractContainerScreenMixin",
+    "client.HumanoidModelMixin"
+  ]
+}

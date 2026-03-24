@@ -1,0 +1,36 @@
+{
+	"schemaVersion": 1,
+	"id": "realapi",
+	"version": "${version}",
+	"name": "RealAPI",
+	"description": "This is an API for my mods!",
+	"authors": [
+		"NTRDeal: Coder"
+	],
+	"contact": {
+		"homepage": "https://modrinth.com/project/realapi"
+	},
+	"license": "MIT",
+	"icon": "icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"net.ntrdeal.realapi.RealAPI"
+		],
+		"client": [
+			"net.ntrdeal.realapi.RealAPIClient"
+		]
+	},
+	"mixins": [
+		"realapi.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.18.4",
+		"minecraft": "~26.1",
+		"java": ">=25",
+		"fabric-api": "*"
+	},
+	"custom": {
+		"modmenu": { "badges": [ "library" ] }
+	}
+}
