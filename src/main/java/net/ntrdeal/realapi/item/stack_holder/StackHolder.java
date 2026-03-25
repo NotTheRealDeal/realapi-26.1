@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
-public interface StackHolder<T extends StackHolder<T>> extends WeightHolder, StackInsertable, TooltipComponent {
+public interface StackHolder<T extends StackHolder<T>> extends StackInsertable, TooltipComponent {
     List<ItemStackTemplate> stacks();
     Supplier<DataResult<Fraction>> weightSupplier();
 
@@ -33,6 +33,10 @@ public interface StackHolder<T extends StackHolder<T>> extends WeightHolder, Sta
 
     default int getStackCount(int size) {
         return size * Math.max(this.stackCount(), 1);
+    }
+
+    default Fraction getMulti() {
+        return Fraction.getFraction(1, this.getStackCount(1));
     }
 
     @Override
@@ -81,15 +85,16 @@ public interface StackHolder<T extends StackHolder<T>> extends WeightHolder, Sta
         return "StackHolder: " + this.stacks();
     }
 
-    @Override
     default DataResult<Fraction> weight() {
         return this.weightSupplier().get();
     }
 
     @Nullable
     default DataResult<Fraction> overrideWeight(ItemInstance instance) {
-        if (instance.get(DataComponents.BUNDLE_CONTENTS) instanceof BundleContents contents) {
-            return contents.weight().map(weight -> weight.add(Fraction.getFraction(1, 16)).multiplyBy(Fraction.getFraction(1, this.getStackCount(1))));
+        if (instance.typeHolder().value() instanceof WeightHolder holder) {
+            return holder.getWeight(instance).map(weight -> weight.multiplyBy(this.getMulti()));
+        } else if (instance.get(DataComponents.BUNDLE_CONTENTS) instanceof BundleContents contents) {
+            return contents.weight().map(weight -> weight.add(Fraction.getFraction(1, 16)).multiplyBy(this.getMulti()));
         } else if (instance.get(DataComponents.BEES) instanceof Bees(List<BeehiveBlockEntity.Occupant> bees) && !bees.isEmpty()) {
             return DataResult.success(Fraction.getFraction(1, this.getStackCount(1)));
         } else return null;
