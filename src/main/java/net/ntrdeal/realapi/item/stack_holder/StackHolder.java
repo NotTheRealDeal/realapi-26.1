@@ -66,7 +66,7 @@ public interface StackHolder<T extends StackHolder<T>> extends StackInsertable, 
     }
 
     default boolean isEqualToHolder(StackHolder<?> holder) {
-        return this.equals(holder) || this.stacks().equals(holder.stacks());
+        return this.stacks().equals(holder.stacks());
     }
 
     default int getHash() {
