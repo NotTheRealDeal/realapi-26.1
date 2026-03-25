@@ -11,16 +11,16 @@ import java.util.function.Supplier;
 public abstract class BundleLike<T extends StackHolder<T>> implements StackHolder<T> {
     public final Supplier<DataResult<Fraction>> weight = Suppliers.memoize(this::computeWeight);
     public final List<ItemStackTemplate> stacks;
-    public final int stackCount;
+    public final float stackCount;
     public final int index;
 
-    public BundleLike(List<ItemStackTemplate> stacks, int stackCount, int index) {
+    public BundleLike(List<ItemStackTemplate> stacks, float stackCount, int index) {
         this.stacks = stacks;
         this.stackCount = stackCount;
         this.index = index;
     }
 
-    public BundleLike(List<ItemStackTemplate> stacks, int stackCount) {
+    public BundleLike(List<ItemStackTemplate> stacks, float stackCount) {
         this(stacks, stackCount, -1);
     }
 
@@ -30,7 +30,7 @@ public abstract class BundleLike<T extends StackHolder<T>> implements StackHolde
     }
 
     @Override
-    public int stackCount() {
+    public float stackCount() {
         return this.stackCount;
     }
 

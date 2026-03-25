@@ -27,16 +27,16 @@ public interface StackHolder<T extends StackHolder<T>> extends StackInsertable, 
     List<ItemStackTemplate> stacks();
     Supplier<DataResult<Fraction>> weightSupplier();
 
-    default int stackCount() {
-        return 1;
+    default float stackCount() {
+        return 1f;
     }
 
-    default int getStackCount(int size) {
-        return size * Math.max(this.stackCount(), 1);
+    default int getMaxCount(int size) {
+        return Math.max((int) (size * Math.max(this.stackCount(), 0f)), 1);
     }
 
-    default Fraction getMulti() {
-        return Fraction.getFraction(1, this.getStackCount(1));
+    default Fraction multiply(Fraction weight) {
+        return Fraction.getFraction(weight.getNumerator(), this.getMaxCount(weight.getDenominator()));
     }
 
     @Override
@@ -92,17 +92,17 @@ public interface StackHolder<T extends StackHolder<T>> extends StackInsertable, 
     @Nullable
     default DataResult<Fraction> overrideWeight(ItemInstance instance) {
         if (instance.typeHolder().value() instanceof WeightHolder holder) {
-            return holder.getWeight(instance).map(weight -> weight.multiplyBy(this.getMulti()));
+            return holder.getWeight(instance).map(this::multiply);
         } else if (instance.get(DataComponents.BUNDLE_CONTENTS) instanceof BundleContents contents) {
-            return contents.weight().map(weight -> weight.add(Fraction.getFraction(1, 16)).multiplyBy(this.getMulti()));
+            return contents.weight().map(weight -> this.multiply(weight.add(Fraction.getFraction(1, 16))));
         } else if (instance.get(DataComponents.BEES) instanceof Bees(List<BeehiveBlockEntity.Occupant> bees) && !bees.isEmpty()) {
-            return DataResult.success(Fraction.getFraction(1, this.getStackCount(1)));
+            return DataResult.success(Fraction.getFraction(1, this.getMaxCount(1)));
         } else return null;
     }
 
     default DataResult<Fraction> getPerWeight(ItemInstance instance) {
         DataResult<Fraction> override = this.overrideWeight(instance);
-        return override != null ? override : DataResult.success(Fraction.getFraction(1, this.getStackCount(instance.getMaxStackSize())));
+        return override != null ? override : DataResult.success(Fraction.getFraction(1, this.getMaxCount(instance.getMaxStackSize())));
     }
 
     default DataResult<Fraction> getWeight(ItemInstance instance) {
