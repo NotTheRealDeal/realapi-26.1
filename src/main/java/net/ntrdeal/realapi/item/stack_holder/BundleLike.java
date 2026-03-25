@@ -11,17 +11,17 @@ import java.util.function.Supplier;
 public abstract class BundleLike<T extends StackHolder<T>> implements StackHolder<T> {
     public final Supplier<DataResult<Fraction>> weight = Suppliers.memoize(this::computeWeight);
     public final List<ItemStackTemplate> stacks;
-    public final float stackCount;
+    public final Fraction scale;
     public final int index;
 
-    public BundleLike(List<ItemStackTemplate> stacks, float stackCount, int index) {
+    public BundleLike(List<ItemStackTemplate> stacks, Fraction scale, int index) {
         this.stacks = stacks;
-        this.stackCount = stackCount;
+        this.scale = scale;
         this.index = index;
     }
 
-    public BundleLike(List<ItemStackTemplate> stacks, float stackCount) {
-        this(stacks, stackCount, -1);
+    public BundleLike(List<ItemStackTemplate> stacks, float scale, int index) {
+        this(stacks, Fraction.getFraction(scale).invert(), index);
     }
 
     @Override
@@ -30,8 +30,8 @@ public abstract class BundleLike<T extends StackHolder<T>> implements StackHolde
     }
 
     @Override
-    public float stackCount() {
-        return this.stackCount;
+    public Fraction scale() {
+        return this.scale;
     }
 
     @Override
@@ -42,6 +42,13 @@ public abstract class BundleLike<T extends StackHolder<T>> implements StackHolde
     @Override
     public int index() {
         return this.index;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof StackHolder<?> holder) {
+            return this.isEqualToHolder(holder);
+        } else return false;
     }
 
     @Override

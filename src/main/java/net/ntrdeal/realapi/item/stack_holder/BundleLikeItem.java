@@ -19,17 +19,16 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ClickAction;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.ItemUseAnimation;
-import net.minecraft.world.item.ItemUtils;
+import net.minecraft.world.item.*;
 import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.level.Level;
+import net.ntrdeal.realapi.data.WeightHolder;
 import org.apache.commons.lang3.math.Fraction;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
-public class BundleLikeItem<T extends StackHolder<T>> extends Item {
+public class BundleLikeItem<T extends StackHolder<T>> extends Item implements WeightHolder {
     public static final int FULL_BAR_COLOR = ARGB.colorFromFloat(1.0F, 1.0F, 0.33F, 0.33F);
     public static final int BAR_COLOR = ARGB.colorFromFloat(1.0F, 0.44F, 0.53F, 1.0F);
 
@@ -216,5 +215,12 @@ public class BundleLikeItem<T extends StackHolder<T>> extends Item {
 
     public void playDropContentsSound(Level level, Entity entity) {
         level.playSound(null, entity.blockPosition(), SoundEvents.BUNDLE_DROP_CONTENTS, SoundSource.PLAYERS, 0.8f, 0.8f + entity.level().getRandom().nextFloat() * 0.4f);
+    }
+
+    @Override
+    public @Nullable DataResult<Fraction> getWeight(ItemInstance instance) {
+        if (instance.get(this.type) instanceof T holder) {
+            return holder.weight().map(weight -> weight.add(Fraction.getFraction(1, 16)));
+        } else return null;
     }
 }
