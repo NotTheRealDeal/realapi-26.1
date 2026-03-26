@@ -22,13 +22,14 @@ import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.level.Level;
+import net.ntrdeal.realapi.data.UnBundleable;
 import net.ntrdeal.realapi.data.WeightHolder;
 import org.apache.commons.lang3.math.Fraction;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
-public class BundleLikeItem<T extends StackHolder<T>> extends Item implements WeightHolder {
+public class BundleLikeItem<T extends StackHolder<T>> extends Item implements WeightHolder, UnBundleable {
     public static final int FULL_BAR_COLOR = ARGB.colorFromFloat(1.0F, 1.0F, 0.33F, 0.33F);
     public static final int BAR_COLOR = ARGB.colorFromFloat(1.0F, 0.44F, 0.53F, 1.0F);
 

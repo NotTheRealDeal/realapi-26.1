@@ -8,7 +8,7 @@ import net.ntrdeal.realapi.RealAPI;
 public interface RealAttributeTags {
     TagKey<Attribute> DIMENSIONS_REFRESHER = bind("dimensions_refresher");
 
-    private static TagKey<Attribute> bind(final String name) {
+    static TagKey<Attribute> bind(final String name) {
         return TagKey.create(Registries.ATTRIBUTE, RealAPI.id(name));
     }
 }

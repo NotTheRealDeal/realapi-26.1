@@ -14,6 +14,7 @@ import net.minecraft.world.item.component.Bees;
 import net.minecraft.world.item.component.BundleContents;
 import net.minecraft.world.level.block.entity.BeehiveBlockEntity;
 import net.ntrdeal.realapi.data.StackInsertable;
+import net.ntrdeal.realapi.data.UnBundleable;
 import net.ntrdeal.realapi.data.WeightHolder;
 import org.apache.commons.lang3.math.Fraction;
 import org.jetbrains.annotations.Nullable;
@@ -33,7 +34,7 @@ public interface StackHolder<T extends StackHolder<T>> extends StackInsertable, 
 
     @Override
     default boolean canInsert(ItemStack stack) {
-        return !stack.isEmpty() && stack.getItem().canFitInsideContainerItems() && StackInsertable.super.canInsert(stack);
+        return !stack.isEmpty() && stack.getItem().canFitInsideContainerItems() && StackInsertable.super.canInsert(stack) && !(stack.getItem() instanceof UnBundleable);
     }
 
     default Stream<ItemStack> stackStream() {

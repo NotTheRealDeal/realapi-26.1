@@ -3,6 +3,7 @@ package net.ntrdeal.realapi;
 import net.fabricmc.api.ModInitializer;
 import net.minecraft.resources.Identifier;
 import net.ntrdeal.realapi.entity.RealAttributes;
+import net.ntrdeal.realapi.item.component.RealDataComponents;
 import net.ntrdeal.realapi.network.RealNetworking;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,6 +14,7 @@ public class RealAPI implements ModInitializer {
 
 	@Override
 	public void onInitialize() {
+		RealDataComponents.register();
 		RealAttributes.register();
 		RealNetworking.register();
 	}

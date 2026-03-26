@@ -10,7 +10,9 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodData;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.ntrdeal.realapi.entity.KeepOnDeath;
 import net.ntrdeal.realapi.entity.RealAttributes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -37,5 +39,10 @@ public abstract class PlayerMixin extends Avatar implements ContainerUser {
     @WrapOperation(method = "blockUsingItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;getSecondsToDisableBlocking()F"))
     private float ntrdeal$shieldFragility(LivingEntity entity, Operation<Float> original) {
         return original.call(entity) * (float) this.getAttributeValue(RealAttributes.SHIELD_FRAGILITY);
+    }
+
+    @WrapOperation(method = "destroyVanishingCursedItems", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;isEmpty()Z"))
+    private boolean ntrdeal$canDrop(ItemStack stack, Operation<Boolean> original) {
+        return original.call(stack) || KeepOnDeath.keepOnDeath(stack);
     }
 }
