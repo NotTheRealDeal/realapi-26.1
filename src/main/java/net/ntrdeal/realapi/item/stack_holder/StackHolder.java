@@ -14,7 +14,6 @@ import net.minecraft.world.item.component.Bees;
 import net.minecraft.world.item.component.BundleContents;
 import net.minecraft.world.level.block.entity.BeehiveBlockEntity;
 import net.ntrdeal.realapi.data.StackInsertable;
-import net.ntrdeal.realapi.data.UnBundleable;
 import net.ntrdeal.realapi.data.WeightHolder;
 import org.apache.commons.lang3.math.Fraction;
 import org.jetbrains.annotations.Nullable;
@@ -34,7 +33,7 @@ public interface StackHolder<T extends StackHolder<T>> extends StackInsertable, 
 
     @Override
     default boolean canInsert(ItemStack stack) {
-        return !stack.isEmpty() && stack.getItem().canFitInsideContainerItems() && StackInsertable.super.canInsert(stack) && !(stack.getItem() instanceof UnBundleable);
+        return !stack.isEmpty() && stack.getItem().canFitInsideContainerItems() && StackInsertable.super.canInsert(stack);
     }
 
     default Stream<ItemStack> stackStream() {
@@ -67,7 +66,7 @@ public interface StackHolder<T extends StackHolder<T>> extends StackInsertable, 
     }
 
     default boolean isEqualToHolder(StackHolder<?> holder) {
-        return this.stacks().equals(holder.stacks());
+        return this.stacks().equals(holder.stacks()) && this.scale().equals(holder.scale());
     }
 
     default int getHash() {
@@ -84,10 +83,10 @@ public interface StackHolder<T extends StackHolder<T>> extends StackInsertable, 
 
     @Nullable
     default DataResult<Fraction> overrideWeight(ItemInstance instance) {
-        if (instance.typeHolder().value() instanceof WeightHolder holder && holder.getWeight(instance) instanceof DataResult<Fraction> weight) {
-            return weight.map(fraction -> fraction.multiplyBy(this.scale()));
+        if (instance.typeHolder().value() instanceof WeightHolder holder) {
+            return holder.getWeight(instance, this.scale());
         } else if (instance.get(DataComponents.BUNDLE_CONTENTS) instanceof BundleContents contents) {
-            return contents.weight().map(weight -> weight.add(Fraction.getFraction(1, 16)).multiplyBy(this.scale()));
+            return contents.weight().map(weight -> weight.add(BundleLikeItem.BUNDLE_SIZE.multiplyBy(this.scale())));
         } else if (instance.get(DataComponents.BEES) instanceof Bees(List<BeehiveBlockEntity.Occupant> bees) && !bees.isEmpty()) {
             return DataResult.success(Fraction.ONE.multiplyBy(this.scale()));
         } else return null;
@@ -102,10 +101,14 @@ public interface StackHolder<T extends StackHolder<T>> extends StackInsertable, 
         return this.getPerWeight(instance).map(weight -> weight.multiplyBy(Fraction.getFraction(instance.count(), 1)));
     }
 
-    default DataResult<Fraction> computeWeight() {
+    default DataResult<Fraction> computeMyWeight() {
+        return this.computeWeight(this.stacks());
+    }
+
+    default DataResult<Fraction> computeWeight(List<? extends ItemInstance> instances) {
         Fraction totalWeight = Fraction.ZERO;
-        for (ItemStackTemplate template : this.stacks()) {
-            DataResult<Fraction> weight = this.getWeight(template);
+        for (ItemInstance instance : instances) {
+            DataResult<Fraction> weight = this.getWeight(instance);
             if (weight.isError()) return weight;
             totalWeight = totalWeight.add(weight.getOrThrow());
         }
@@ -211,6 +214,15 @@ public interface StackHolder<T extends StackHolder<T>> extends StackInsertable, 
             this.weight = this.weight.subtract(this.holder.getWeight(stack).getOrThrow());
             this.setIndex(-1);
             return stack;
+        }
+
+        public List<ItemStack> addAll(List<ItemStackTemplate> templates) {
+            List<ItemStack> listedStacks = new ArrayList<>();
+            templates.forEach(template -> listedStacks.add(template.create()));
+            for (ItemStack stack : listedStacks) {
+                this.tryAdd(stack);
+            }
+            return listedStacks.stream().filter(stack -> !stack.isEmpty()).toList();
         }
 
         public List<ItemStackTemplate> toTemplate() {

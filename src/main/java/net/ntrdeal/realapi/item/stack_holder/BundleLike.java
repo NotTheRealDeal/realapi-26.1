@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.function.Supplier;
 
 public abstract class BundleLike<T extends StackHolder<T>> implements StackHolder<T> {
-    public final Supplier<DataResult<Fraction>> weight = Suppliers.memoize(this::computeWeight);
+    public final Supplier<DataResult<Fraction>> weight = Suppliers.memoize(this::computeMyWeight);
     public final List<ItemStackTemplate> stacks;
     public final Fraction scale;
     public final int index;

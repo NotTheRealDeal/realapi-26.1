@@ -6,5 +6,5 @@ import org.apache.commons.lang3.math.Fraction;
 import org.jetbrains.annotations.Nullable;
 
 public interface WeightHolder {
-    @Nullable DataResult<Fraction> getWeight(ItemInstance instance);
+    @Nullable DataResult<Fraction> getWeight(ItemInstance instance, Fraction multiplier);
 }

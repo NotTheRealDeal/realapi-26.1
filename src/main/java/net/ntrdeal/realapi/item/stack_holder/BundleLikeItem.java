@@ -22,16 +22,16 @@ import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.level.Level;
-import net.ntrdeal.realapi.data.UnBundleable;
 import net.ntrdeal.realapi.data.WeightHolder;
 import org.apache.commons.lang3.math.Fraction;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
-public class BundleLikeItem<T extends StackHolder<T>> extends Item implements WeightHolder, UnBundleable {
+public class BundleLikeItem<T extends StackHolder<T>> extends Item implements WeightHolder {
     public static final int FULL_BAR_COLOR = ARGB.colorFromFloat(1.0F, 1.0F, 0.33F, 0.33F);
     public static final int BAR_COLOR = ARGB.colorFromFloat(1.0F, 0.44F, 0.53F, 1.0F);
+    public static final Fraction BUNDLE_SIZE = Fraction.getFraction(1, 16);
 
     public final DataComponentType<T> type;
     public final T empty;
@@ -219,9 +219,9 @@ public class BundleLikeItem<T extends StackHolder<T>> extends Item implements We
     }
 
     @Override
-    public @Nullable DataResult<Fraction> getWeight(ItemInstance instance) {
+    public @Nullable DataResult<Fraction> getWeight(ItemInstance instance, Fraction multiplier) {
         if (instance.get(this.type) instanceof T holder) {
-            return holder.weight().map(weight -> weight.add(Fraction.getFraction(1, 16)));
+            return holder.weight().map(weight -> weight.add(BUNDLE_SIZE.multiplyBy(multiplier)));
         } else return null;
     }
 }

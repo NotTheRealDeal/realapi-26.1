@@ -9,6 +9,7 @@
     "ExperienceOrbMixin",
     "InventoryMixin",
     "LivingEntityMixin",
+    "PlaceRecipeHelperMixin",
     "PlayerMixin"
   ],
   "injectors": {
