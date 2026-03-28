@@ -3,6 +3,7 @@
   "package": "net.ntrdeal.realapi.mixin",
   "compatibilityLevel": "JAVA_25",
   "mixins": [
+    "BlockMixin",
     "CombatRulesMixin",
     "CrossbowItemMixin",
     "EntityMixin",

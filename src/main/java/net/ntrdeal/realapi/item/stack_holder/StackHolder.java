@@ -168,7 +168,7 @@ public interface StackHolder<T extends StackHolder<T>> extends StackInsertable, 
             DataResult<Fraction> maxWeight = this.holder.getPerWeight(stack);
             if (maxWeight.isError()) return 0;
             Fraction oneWeight = maxWeight.getOrThrow();
-            int adding = this.getMaxAmount(oneWeight);
+            int adding = Math.min(this.getMaxAmount(oneWeight), stack.count());
             if (adding == 0) return 0;
 
             this.weight = this.weight.add(oneWeight.multiplyBy(Fraction.getFraction(adding, 1)));
@@ -216,12 +216,9 @@ public interface StackHolder<T extends StackHolder<T>> extends StackInsertable, 
             return stack;
         }
 
-        public List<ItemStack> addAll(List<ItemStackTemplate> templates) {
-            List<ItemStack> listedStacks = new ArrayList<>();
-            templates.forEach(template -> listedStacks.add(template.create()));
-            for (ItemStack stack : listedStacks) {
-                this.tryAdd(stack);
-            }
+        public List<ItemStack> addAll(List<ItemStack> stacks) {
+            List<ItemStack> listedStacks = new ArrayList<>(stacks);
+            listedStacks.forEach(this::tryAdd);
             return listedStacks.stream().filter(stack -> !stack.isEmpty()).toList();
         }
 
