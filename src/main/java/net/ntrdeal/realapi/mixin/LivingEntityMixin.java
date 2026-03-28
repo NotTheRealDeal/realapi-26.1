@@ -14,8 +14,12 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.waypoints.WaypointTransmitter;
+import net.ntrdeal.realapi.entity.KeepOnDeath;
 import net.ntrdeal.realapi.entity.RealAttributes;
 import net.ntrdeal.realapi.entity.event.EntityAttributeEvents;
 import org.spongepowered.asm.mixin.Mixin;
@@ -23,6 +27,9 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin extends Entity implements Attackable, WaypointTransmitter {
@@ -64,6 +71,25 @@ public abstract class LivingEntityMixin extends Entity implements Attackable, Wa
     @WrapOperation(method = "getJumpPower(F)F", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;getAttributeValue(Lnet/minecraft/core/Holder;)D"))
     private double ntrdeal$movementScaleJump(LivingEntity entity, Holder<Attribute> attribute, Operation<Double> original) {
         return original.call(entity, attribute) * entity.getAttributeValue(RealAttributes.MOVEMENT_SCALE);
+    }
+
+    @WrapMethod(method = "dropAllDeathLoot")
+    private void ntrdeal$keepOnDeath(ServerLevel level, DamageSource source, Operation<Void> original) {
+        if ((Entity)this instanceof Player player) {
+            Map<Integer, ItemStack> collectedStacks = new HashMap<>();
+            Inventory inventory = player.getInventory();
+
+            for (int slot = 0; slot < inventory.getContainerSize(); slot++) {
+                ItemStack maybe = inventory.getItem(slot);
+                if (KeepOnDeath.keepOnDeath(maybe)) {
+                    collectedStacks.put(slot, inventory.removeItem(slot, maybe.count()));
+                }
+            }
+
+            original.call(level, source);
+
+            collectedStacks.forEach(inventory::add);
+        } else original.call(level, source);
     }
 
     @WrapMethod(method = "hurtServer")

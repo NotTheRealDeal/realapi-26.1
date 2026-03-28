@@ -8,7 +8,6 @@
     "CrossbowItemMixin",
     "EntityMixin",
     "ExperienceOrbMixin",
-    "InventoryMixin",
     "LivingEntityMixin",
     "PlaceRecipeHelperMixin",
     "PlayerMixin"
