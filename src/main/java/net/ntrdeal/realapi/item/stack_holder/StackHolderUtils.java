@@ -39,7 +39,7 @@ public class StackHolderUtils {
         T holder = stack.get(type);
         if (holder == null) return;
 
-        StackHolder.Builder<T> builder = holder.builder();
+        HolderBuilder<T> builder = holder.builder();
         builder.setIndex(index);
         stack.set(type, builder.build());
     }

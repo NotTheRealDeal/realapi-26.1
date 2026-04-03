@@ -47,19 +47,19 @@ public class BundleLikeItem<T extends StackHolder<T>> extends Item implements We
         T holder = stack.get(this.type);
         if (holder == null) return false;
         ItemStack slotStack = slot.getItem();
-        StackHolder.Builder<T> builder = holder.builder();
+        HolderBuilder<T> builder = holder.builder();
 
         if (action.equals(ClickAction.PRIMARY) && !slotStack.isEmpty()) {
-            if (builder.tryTransfer(player, slot) > 0) this.playInsertSound(player);
+            if (!builder.trySlotAdd(player, slot).isEmpty()) this.playInsertSound(player);
             else this.playInsertFailSound(player);
 
             stack.set(this.type, builder.build());
             this.broadcastChanges(player);
             return true;
         } else if (action.equals(ClickAction.SECONDARY) && slotStack.isEmpty()) {
-            ItemStack emptiedStack = builder.removeStack();
+            ItemStack emptiedStack = builder.removeSelectedStack();
 
-            if (emptiedStack != null) {
+            if (!emptiedStack.isEmpty()) {
                 ItemStack remainder = slot.safeInsert(emptiedStack);
                 if (remainder.getCount() > 0) builder.tryAdd(remainder);
                 else this.playRemoveSound(player);
@@ -80,18 +80,18 @@ public class BundleLikeItem<T extends StackHolder<T>> extends Item implements We
 
         T holder = stack.get(this.type);
         if (holder == null) return false;
-        StackHolder.Builder<T> builder = holder.builder();
+        HolderBuilder<T> builder = holder.builder();
 
         if (action.equals(ClickAction.PRIMARY) && !slotStack.isEmpty()) {
-            if (slot.allowModification(player) && builder.tryAdd(slotStack) > 0) this.playInsertSound(player);
+            if (slot.allowModification(player) && !builder.tryAdd(slotStack).isEmpty()) this.playInsertSound(player);
             else this.playInsertFailSound(player);
             stack.set(this.type, builder.build());
             this.broadcastChanges(player);
             return true;
         } else if (action.equals(ClickAction.SECONDARY) && slotStack.isEmpty()) {
             if (slot.allowModification(player)) {
-                ItemStack removedStack = builder.removeStack();
-                if (removedStack != null) {
+                ItemStack removedStack = builder.removeSelectedStack();
+                if (!removedStack.isEmpty()) {
                     this.playRemoveSound(player);
                     access.set(removedStack);
                 }
@@ -178,7 +178,7 @@ public class BundleLikeItem<T extends StackHolder<T>> extends Item implements We
     public void setIndex(ItemStack stack, int index) {
         T holder = stack.get(this.type);
         if (holder == null) return;
-        StackHolder.Builder<T> builder = holder.builder();
+        HolderBuilder<T> builder = holder.builder();
         builder.setIndex(index);
         stack.set(this.type, builder.build());
     }
@@ -186,9 +186,9 @@ public class BundleLikeItem<T extends StackHolder<T>> extends Item implements We
     public void dropItem(Level level, Player player, ItemStack stack) {
         T holder = stack.get(this.type);
         if (holder == null || holder.isEmpty()) return;
-        StackHolder.Builder<T> builder = holder.builder();
-        ItemStack droppedStack = builder.removeStack();
-        if (droppedStack == null) return;
+        HolderBuilder<T> builder = holder.builder();
+        ItemStack droppedStack = builder.removeSelectedStack();
+        if (droppedStack.isEmpty()) return;
         this.playRemoveSound(player);
         stack.set(this.type, builder.build());
         player.drop(droppedStack, true);

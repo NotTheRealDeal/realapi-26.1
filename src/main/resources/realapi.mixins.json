@@ -8,9 +8,11 @@
     "CrossbowItemMixin",
     "EntityMixin",
     "ExperienceOrbMixin",
+    "ItemEntityMixin",
     "LivingEntityMixin",
     "PlaceRecipeHelperMixin",
-    "PlayerMixin"
+    "PlayerMixin",
+    "events.server.ServerPlayerMixin"
   ],
   "injectors": {
     "defaultRequire": 1
@@ -20,6 +22,7 @@
   },
   "client": [
     "client.AbstractContainerScreenMixin",
-    "client.HumanoidModelMixin"
+    "client.HumanoidModelMixin",
+    "events.client.LocalPlayerMixin"
   ]
 }

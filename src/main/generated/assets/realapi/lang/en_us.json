@@ -1,0 +1,14 @@
+{
+  "attribute.realapi.appetite": "Appetite",
+  "attribute.realapi.armor_penetration": "Armor Penetration",
+  "attribute.realapi.bane_of_adolescence": "Bane of Adolescence",
+  "attribute.realapi.charge_time": "Charge Time",
+  "attribute.realapi.dodge_chance": "Dodge Chance",
+  "attribute.realapi.fire_damage_multiplier": "Fire Damage Multiplier",
+  "attribute.realapi.intelligence": "Intelligence",
+  "attribute.realapi.movement_scale": "Movement Scale",
+  "attribute.realapi.ranged_attack_multiplier": "Ranged Attack Multiplier",
+  "attribute.realapi.shield_fragility": "Shield Fragility",
+  "tag.attribute.realapi.dimensions_refresher": "Dimensions Refresher",
+  "tag.item.realapi.keep_on_death": "Keep On Death"
+}
