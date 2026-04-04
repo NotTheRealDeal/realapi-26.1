@@ -83,8 +83,9 @@ public class HolderBuilder<T extends StackHolder<T>> implements StackHolder<T> {
         ItemStack insertingStack = addingStack.split(adding);
 
         for (ItemStack listedStack : this.stacks.reversed()) {
+            if (insertingStack.isEmpty()) break;
             if (listedStack.isEmpty() || !listedStack.isStackable() || !ItemStack.isSameItemSameComponents(insertingStack, listedStack)) continue;
-            int shrink = Math.min(listedStack.count(), this.maxStackSize(listedStack) - listedStack.count());
+            int shrink = Math.min(insertingStack.count(), this.maxStackSize(listedStack) - listedStack.count());
             if (shrink == 0) continue;
             listedStack.grow(shrink);
             insertingStack.shrink(shrink);
@@ -145,7 +146,7 @@ public class HolderBuilder<T extends StackHolder<T>> implements StackHolder<T> {
     public List<ItemStack> addAll(List<ItemStack> stacks, Consumer<ItemStack> consumer) {
         stacks.forEach(stack -> {
             ItemStack added = this.tryAdd(stack);
-            if (!added.isEmpty()) consumer.accept(stack);
+            if (!added.isEmpty()) consumer.accept(added);
         });
         return stacks.stream().filter(stack -> !stack.isEmpty()).toList();
     }
