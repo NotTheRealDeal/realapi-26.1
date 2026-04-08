@@ -3,16 +3,17 @@
   "package": "net.ntrdeal.realapi.mixin",
   "compatibilityLevel": "JAVA_25",
   "mixins": [
-    "BlockMixin",
     "CombatRulesMixin",
     "CrossbowItemMixin",
     "EntityMixin",
     "ExperienceOrbMixin",
-    "ItemEntityMixin",
     "LivingEntityMixin",
     "PlaceRecipeHelperMixin",
     "PlayerMixin",
-    "events.server.ServerPlayerMixin"
+    "event.BlockMixin",
+    "event.ItemEntityMixin",
+    "event.LivingEntityMixin",
+    "event.ServerPlayerMixin"
   ],
   "injectors": {
     "defaultRequire": 1
@@ -21,8 +22,10 @@
     "requireAnnotations": true
   },
   "client": [
-    "client.AbstractContainerScreenMixin",
-    "client.HumanoidModelMixin",
-    "events.client.LocalPlayerMixin"
+    "client.event.AbstractContainerScreenMixin",
+    "client.event.HumanoidModelMixin",
+    "client.event.LocalPlayerMixin",
+    "client.render.DisplayContextAccessor",
+    "client.render.LayerRenderStateMixin"
   ]
 }

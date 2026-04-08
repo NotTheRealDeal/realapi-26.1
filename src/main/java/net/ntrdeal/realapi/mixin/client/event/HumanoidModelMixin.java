@@ -1,4 +1,4 @@
-package net.ntrdeal.realapi.mixin.client;
+package net.ntrdeal.realapi.mixin.client.event;
 
 import net.minecraft.client.model.ArmedModel;
 import net.minecraft.client.model.EntityModel;

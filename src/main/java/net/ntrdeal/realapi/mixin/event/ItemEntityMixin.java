@@ -1,4 +1,4 @@
-package net.ntrdeal.realapi.mixin;
+package net.ntrdeal.realapi.mixin.event;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
@@ -20,8 +20,8 @@ public abstract class ItemEntityMixin extends Entity implements TraceableEntity 
     }
 
     @WrapOperation(method = "playerTouch", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Inventory;add(Lnet/minecraft/world/item/ItemStack;)Z"))
-    private boolean ntrdeal$pickupEvent(Inventory inventory, ItemStack stack, Operation<Boolean> original) {
-        if (PlayerPickupItemEvent.PICKUP.invoker().pickup(inventory, (ItemEntity)(Entity) this, stack)) return original.call(inventory, stack);
+    private boolean ntrdeal$pickupEvent(Inventory inventory, ItemStack itemStack, Operation<Boolean> original) {
+        if (PlayerPickupItemEvent.PICKUP.invoker().pickup(inventory, (ItemEntity)(Entity) this, itemStack)) return original.call(inventory, itemStack);
         else return false;
     }
 }

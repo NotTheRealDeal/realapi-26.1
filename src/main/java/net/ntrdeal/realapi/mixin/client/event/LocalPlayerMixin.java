@@ -1,4 +1,4 @@
-package net.ntrdeal.realapi.mixin.events.client;
+package net.ntrdeal.realapi.mixin.client.event;
 
 import com.mojang.authlib.GameProfile;
 import net.minecraft.client.multiplayer.ClientLevel;

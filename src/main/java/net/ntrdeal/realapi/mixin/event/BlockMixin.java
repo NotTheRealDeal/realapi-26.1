@@ -1,4 +1,4 @@
-package net.ntrdeal.realapi.mixin;
+package net.ntrdeal.realapi.mixin.event;
 
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;

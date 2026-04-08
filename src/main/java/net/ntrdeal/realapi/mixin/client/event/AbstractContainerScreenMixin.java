@@ -1,4 +1,4 @@
-package net.ntrdeal.realapi.mixin.client;
+package net.ntrdeal.realapi.mixin.client.event;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
@@ -19,8 +19,8 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
     }
 
     @WrapOperation(method = "init", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/inventory/AbstractContainerScreen;addItemSlotMouseAction(Lnet/minecraft/client/gui/ItemSlotMouseAction;)V"))
-    private void ntrdeal$containerScreenInitEvents(AbstractContainerScreen<?> screen, ItemSlotMouseAction bundleAction, Operation<Void> original) {
-        original.call(screen, bundleAction);
+    private void ntrdeal$containerScreenInitEvents(AbstractContainerScreen<?> screen, ItemSlotMouseAction itemSlotMouseAction, Operation<Void> original) {
+        original.call(screen, itemSlotMouseAction);
         ContainerScreenEvents.SLOT_MOUSE_ACTION.invoker().add(this.minecraft, action -> original.call(screen, action));
         ContainerScreenEvents.INIT.invoker().init(screen, this.minecraft);
     }

@@ -21,12 +21,9 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.waypoints.WaypointTransmitter;
 import net.ntrdeal.realapi.entity.KeepOnDeath;
 import net.ntrdeal.realapi.entity.RealAttributes;
-import net.ntrdeal.realapi.entity.event.EntityAttributeEvents;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -50,11 +47,6 @@ public abstract class LivingEntityMixin extends Entity implements Attackable, Wa
                 .add(RealAttributes.BANE_OF_ADOLESCENCE)
                 .add(RealAttributes.FIRE_DAMAGE_MULTIPLIER)
                 .add(RealAttributes.DODGE_CHANCE);
-    }
-
-    @Inject(method = "onAttributeUpdated", at = @At("TAIL"))
-    private void ntrdeal$attributesUpdatedEvent(Holder<Attribute> attribute, CallbackInfo ci) {
-        EntityAttributeEvents.UPDATED.invoker().update((LivingEntity)(Entity)this, attribute);
     }
 
     @WrapOperation(method = "igniteForTicks", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;getAttributeValue(Lnet/minecraft/core/Holder;)D"))
