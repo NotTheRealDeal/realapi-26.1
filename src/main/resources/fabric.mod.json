@@ -19,9 +19,6 @@
 		],
 		"client": [
 			"net.ntrdeal.realapi.RealAPIClient"
-		],
-		"fabric-datagen": [
-			"net.ntrdeal.realapi.RealAPIDataGenerator"
 		]
 	},
 	"mixins": [

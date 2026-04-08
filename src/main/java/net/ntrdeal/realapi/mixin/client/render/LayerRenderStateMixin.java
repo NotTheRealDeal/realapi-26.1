@@ -20,9 +20,7 @@ import java.util.Map;
 
 @Mixin(ItemStackRenderState.LayerRenderState.class)
 public class LayerRenderStateMixin {
-    @Shadow
-    @Final
-    ItemStackRenderState this$0;
+    @Shadow @Final ItemStackRenderState this$0;
     @Shadow @Final private List<BakedQuad> quads;
     @Shadow private ItemStackRenderState.FoilType foilType;
     @Shadow @Final public static int[] EMPTY_TINTS;
