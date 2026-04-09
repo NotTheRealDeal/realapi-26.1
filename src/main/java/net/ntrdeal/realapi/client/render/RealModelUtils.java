@@ -8,9 +8,8 @@ import java.util.List;
 
 @ApiStatus.NonExtendable
 public interface RealModelUtils {
-    static FirstPerson firstPerson() {
-        return new FirstPerson();
-    }
+    static FirstPerson firstPerson() {return new FirstPerson();}
+    static LeftHand leftHand() {return new LeftHand();}
 
     static MultiProperty multi(ConditionalItemModelProperty... properties) {
         return multi(Arrays.asList(properties));

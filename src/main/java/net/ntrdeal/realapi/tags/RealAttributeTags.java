@@ -4,11 +4,13 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.ntrdeal.realapi.RealAPI;
+import org.jetbrains.annotations.ApiStatus;
 
+@ApiStatus.NonExtendable
 public interface RealAttributeTags {
     TagKey<Attribute> DIMENSIONS_REFRESHER = bind("dimensions_refresher");
 
-    static TagKey<Attribute> bind(final String name) {
+    private static TagKey<Attribute> bind(final String name) {
         return TagKey.create(Registries.ATTRIBUTE, RealAPI.id(name));
     }
 }
